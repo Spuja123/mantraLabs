@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+    <link rel="stylesheet" href="assests/css/bootstrap.css"/>
+    <script src="assests/js/angular.js"></script>
+    <style>
+        .text-underline{
+            text-decoration: underline !important;
+        }
+    </style>
+</head>
+<body ng-app="todoApp">    
+    <div ng-controller="todoListCtrl">
+        <div class="m-4 d-flex align-items-center justify-content-between">
+            <input type="text" class="form-control mr-3" placeholder="Enter new todo" ng-model="ItemName">
+            <button class="btn btn-primary" role="button" ng-click="addItem(ItemName)">Add </button>
+        </div>
+        <div class="mx-3 d-flex align-items-center justify-content-between">
+            <h4 class="ml-2"> Todo List</h4>
+            <span class="pr-2" ng-show="todoList.length > 0">There are {{ (todoList | filter : { isComplete: false }).length }} todos.</span>
+        </div>
+        <div class="ml-4 mr-4">
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center" ng-repeat="item in todoList track by $index">
+                    <span ng-class="{'text-underline': item.isComplete}">{{item.itemName}}</span>
+                    <button class="btn btn-info" ng-click="item.isComplete=true" ng-if="!item.isComplete">Complete</button>
+                    <div ng-if="item.isComplete">
+                        <button class="btn btn-warning" ng-click="item.isComplete=false">Revert</button>
+                        <button class="btn btn-danger m-2" ng-click="deleteItem($index)">Delete</button>
+                    </div>
+                </li>
+            </ul>
+        </div>  
+    </div>
+    <script>
+        var app = angular.module('todoApp',[])
+        .controller('todoListCtrl', function($scope){
+            $scope.todoList = [
+                {
+                itemName : 'Watch Movie',
+                isComplete : false                
+                },
+                {
+                itemName : 'Read Novel',
+                isComplete : false                
+                },
+            ];
+            $scope.todoListLength
+            $scope.addItem = function(ItemName){
+                if(ItemName){
+                    var obj = {
+                        itemName : ItemName,
+                        isComplete : false 
+                    }
+                    $scope.todoList.push(obj);
+                    $scope.ItemName = "";
+                }              
+            }
+            $scope.deleteItem = function(itemIndex){
+                $scope.todoList.splice(itemIndex, 1);
+            }
+        });
+    </script>      
+</body>
+</html>
